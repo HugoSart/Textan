@@ -1,4 +1,4 @@
-package textan.model;
+package textan.model.article;
 
 import java.util.*;
 
@@ -21,7 +21,7 @@ public class Article {
     public String abst;
     public List<String> keywords = new ArrayList<String>();
 
-    public List<Chapter> chapters = new ArrayList<Chapter>();
+    public List<Section> sections = new ArrayList<Section>();
     public List<String> references = new ArrayList<String>();
 
     @Override
@@ -40,14 +40,14 @@ public class Article {
         str.append("\n");
         str.append("** Abstract **\n").append(abst).append("\n\n");
 
-        str.append("** Chapters **\n\n");
-        for (Chapter chapter : chapters) {
-            str.append(chapter.number).append(" ").append(chapter.title).append("\n")
-            .append(chapter.content).append("\n\n");
+        str.append("** Sections **\n\n");
+        for (Section section : sections) {
+            str.append(section.number).append(" ").append(section.title).append("\n")
+            .append(section.content).append("\n\n");
 
-            for (Chapter subChapter : chapter.subChapters) {
-                str.append(chapter.number).append(".").append(subChapter.number).append(" ").append(subChapter.title).append("\n");
-                str.append(subChapter.content).append("\n\n");
+            for (Section subSection : section.subSections) {
+                str.append(section.number).append(".").append(subSection.number).append(" ").append(subSection.title).append("\n");
+                str.append(subSection.content).append("\n\n");
             }
 
         }

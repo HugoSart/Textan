@@ -1,15 +1,13 @@
 package textan;
 
-import edu.stanford.nlp.pipeline.Annotation;
-import edu.stanford.nlp.pipeline.StanfordCoreNLPClient;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.text.PDFTextStripper;
-import textan.model.Article;
-import textan.model.PDFProcessor;
+import textan.model.I3EArticleParser;
+import textan.model.article.Article;
+import textan.model.article.Statistics;
 
 import java.awt.print.PrinterException;
 import java.io.File;
@@ -17,7 +15,6 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * User: hugo_<br/>
@@ -38,10 +35,16 @@ public class Textan {
         }
 
 
-        PDDocument doc = PDDocument.load(new File("pdf/29.pdf"));
-        PDFProcessor processor = new PDFProcessor(doc);
+        PDDocument doc = PDDocument.load(new File("pdf/23.pdf"));
+        I3EArticleParser processor = new I3EArticleParser(doc);
         Article article = processor.toArticle();
-        System.out.println(article);
+        Statistics statistics = new Statistics(article);
+
+        int i = 1;
+        for (String reference : article.references) {
+            System.out.println(i++ + " - " + reference);
+            System.out.println();
+        }
 
         doc.close();
 
