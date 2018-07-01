@@ -4,14 +4,13 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 import textan.model.article.Article;
 import textan.model.article.Section;
+import textan.model.util.NLPUtils;
 import textan.model.util.Util;
 
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +32,8 @@ public class I3EArticleParser {
 
         Article article = new Article();
 
-        String fullText =  docText;
+        String fullText = docText;
+        String header = fullText.split("Abstract—")[0];
         String[] lines = fullText.split(System.getProperty("line.separator"));
 
         // Parse first line
@@ -48,8 +48,18 @@ public class I3EArticleParser {
         article.month = cal.get(Calendar.MONTH);
         article.year = Integer.valueOf(dateLine[1]);
 
-        // Parse others
-        article.title = lines[1].trim();
+        // Parse title
+        List<String> titleLines = new ArrayList<>();
+        for (int i = 1; NLPUtils.findPersonalNames(lines[i]).size() == 0; i++)
+            titleLines.add(lines[i]);
+        article.title = "";
+        for (String titleLine : titleLines)
+            article.title += titleLine + " ";
+        article.title = article.title.trim();
+
+        // Parse authors
+        for (int i = titleLines.size() + 1; i < header.split("\n").length; i++)
+            article.authors.addAll(NLPUtils.findPersonalNames(lines[i]));
 
         // Parse abstract
         String abs = fullText;
@@ -98,12 +108,13 @@ public class I3EArticleParser {
         Section section = new Section(index, sectionStrings[0], "");
 
         int subIndex = 0;
-        while(true) {
+        while (true) {
 
             try {
 
                 String[] subSectionStrings = splitSubSection(sectionStrings[1], subIndex);
-                if (subIndex != 0) section.subSections.add(new Section(subIndex, subSectionStrings[0], subSectionStrings[1]));
+                if (subIndex != 0)
+                    section.subSections.add(new Section(subIndex, subSectionStrings[0], subSectionStrings[1]));
                 else section.content = subSectionStrings[1];
 
             } catch (NullPointerException e) {
@@ -123,9 +134,9 @@ public class I3EArticleParser {
         String fullText = docText;
 
         // Extract section text
-        final Pattern ssPattern = Pattern.compile("^" + Util.arabicToRoman(index) + "[.]\\s+(.+?)" + "^" + Util.arabicToRoman(index + 1) + "[.][ ]",Pattern.DOTALL | Pattern.MULTILINE);
+        final Pattern ssPattern = Pattern.compile("^" + Util.arabicToRoman(index) + "[.]\\s+(.+?)" + "^" + Util.arabicToRoman(index + 1) + "[.][ ]", Pattern.DOTALL | Pattern.MULTILINE);
         final Pattern spPattern = Pattern.compile("^" + Util.arabicToRoman(index) + "[.]\\s+(.+?)" + "^APPENDIX", Pattern.DOTALL | Pattern.MULTILINE);
-        final Pattern saPattern = Pattern.compile("^" + Util.arabicToRoman(index) + "[.]\\s+(.+?)" + "^ACKNOWLEDGMENT", Pattern.DOTALL | Pattern.MULTILINE);
+        final Pattern saPattern = Pattern.compile("^" + Util.arabicToRoman(index) + "[.]\\s+(.+?)" + "^ACKNOWLEDGMENTS", Pattern.DOTALL | Pattern.MULTILINE);
         final Pattern srPattern = Pattern.compile("^" + Util.arabicToRoman(index) + "[.]\\s+(.+?)" + "^REFERENCES", Pattern.DOTALL | Pattern.MULTILINE);
 
         final Matcher ssMatcher = ssPattern.matcher(fullText);
@@ -143,11 +154,20 @@ public class I3EArticleParser {
         sectionContent = Util.removeLinesFromBottom(sectionContent, 1);
 
         // Extract and remove title
-        String title = Util.removeWordsFromTop(sectionContent.split("\\n+")[0], 1);
-        sectionContent = Util.removeLinesFromTop(sectionContent, 1);
+        String[] sectionLines = sectionContent.split("\\r?\\n");
+        String title = "";
+        int numberOfLinesInTitle = 0;
+        for (String sectionLine : sectionLines) {
+            if (sectionLine.equals(sectionLine.toUpperCase())) {
+                title += " " + sectionLine;
+                numberOfLinesInTitle++;
+            } else break;
+        }
+
+        sectionContent = Util.removeLinesFromTop(sectionContent, numberOfLinesInTitle);
 
         String[] ret = new String[2];
-        ret[0] = title;
+        ret[0] = title.replaceAll("^(\\s|[A-Z])+\\.\\s", "").replaceAll("\n", "");
         ret[1] = sectionContent;
 
         return ret;
@@ -157,31 +177,37 @@ public class I3EArticleParser {
     private String[] splitSubSection(String str, int index) {
 
         // Extract section text
-        final Pattern ssPattern = Pattern.compile("^" + Util.arabicToUpperCase(index) + "[.][ ](.+)" + "^" + Util.arabicToUpperCase(index + 1) + "[.][ ]",Pattern.DOTALL | Pattern.MULTILINE);
-        final Pattern srPattern = Pattern.compile("^" + Util.arabicToUpperCase(index) + "[.][ ](.+)", Pattern.DOTALL | Pattern.MULTILINE);
-        final Matcher ssMatcher = ssPattern.matcher(str);
-        final Matcher srMatcher = srPattern.matcher(str);
+        final Pattern stsPattern = Pattern.compile("^" + Util.arabicToUpperCase(index) + "[.][ ](.+)" + "^" + Util.arabicToUpperCase(index + 1) + "[.][ ]", Pattern.DOTALL | Pattern.MULTILINE);
+        final Pattern stfPattern = Pattern.compile("^" + Util.arabicToUpperCase(index) + "[.][ ](.+)", Pattern.DOTALL | Pattern.MULTILINE);
+        final Matcher stsMatcher = stsPattern.matcher(str);
+        final Matcher stfMatcher = stfPattern.matcher(str);
 
         // Additional zero patterns
-        final Pattern zsPattern = Pattern.compile("^(.+)" + Util.arabicToUpperCase(index + 1) + "[.][ ]",Pattern.DOTALL | Pattern.MULTILINE);
-        final Pattern zzPattern = Pattern.compile("^(.+)",Pattern.DOTALL | Pattern.MULTILINE);
-        final Matcher zsMatcher = zsPattern.matcher(str);
-        final Matcher zzMatcher = zzPattern.matcher(str);
+        final Pattern ztsPattern = Pattern.compile("^(.+)" + Util.arabicToUpperCase(index + 1) + "[.][ ]", Pattern.DOTALL | Pattern.MULTILINE);
+        final Pattern ztfPattern = Pattern.compile("^(.+)", Pattern.DOTALL | Pattern.MULTILINE);
+        final Matcher ztsMatcher = ztsPattern.matcher(str);
+        final Matcher ztfMatcher = ztfPattern.matcher(str);
+
+        // Empty pattern
+        final Pattern zesPattern = Pattern.compile("\\A" + Util.arabicToUpperCase(index + 1) + "[.][ ]", Pattern.DOTALL | Pattern.MULTILINE);
+        final Matcher zesMatcher = zesPattern.matcher(str);
 
         String subSectionContent = null;
         if (index != 0) {
-            if (ssMatcher.find()) {
-                subSectionContent = ssMatcher.group();
+            if (stsMatcher.find()) {
+                subSectionContent = stsMatcher.group();
                 subSectionContent = Util.removeLinesFromBottom(subSectionContent, 1);
-            } else if (srMatcher.find()) {
-                subSectionContent = srMatcher.group();
+            } else if (stfMatcher.find()) {
+                subSectionContent = stfMatcher.group();
             }
         } else {
-            if (zsMatcher.find()) {
-                subSectionContent = zsMatcher.group();
+            if (zesMatcher.find()) {
+                subSectionContent = "";
+            } else if (ztsMatcher.find()) {
+                subSectionContent = ztsMatcher.group();
                 subSectionContent = Util.removeLinesFromBottom(subSectionContent, 1);
-            } else if (zzMatcher.find()) {
-                subSectionContent = zzMatcher.group();
+            } else if (ztfMatcher.find()) {
+                subSectionContent = ztfMatcher.group();
             }
         }
 
@@ -206,6 +232,9 @@ public class I3EArticleParser {
         str = Util.removeAll(str, "^[0-9]+-[0-9]+\\s©\\s[0-9]+\\sIEEE.+permission[.]$");
         str = Util.removeAll(str, "^See\\s+.+\\s+for\\s+more\\s+information[.]$");
 
+        // TODO: remove article name trash
+        // TODO: remove trash pdf 29
+
         str = str.replaceAll("(?m)^[ \t]*\r?\n", "");
         return str;
 
@@ -222,17 +251,23 @@ public class I3EArticleParser {
 
         text = Util.removeLinesFromTop(text, 1);
 
-        final Pattern pattern = Pattern.compile("^\\[" + index + "\\](.*?)\\[[0-9]+\\]", Pattern.DOTALL | Pattern.MULTILINE);
-        final Matcher matcher = pattern.matcher(text);
+        final Pattern patternYear = Pattern.compile("^\\[" + index + "\\](.*?)[0-9]+[.]$", Pattern.DOTALL | Pattern.MULTILINE);
+        final Matcher matcherYear = patternYear.matcher(text);
 
-        final Pattern fPattern = Pattern.compile("^\\[" + index + "\\](.*?).+", Pattern.DOTALL | Pattern.MULTILINE);
-        final Matcher fMatcher = fPattern.matcher(text);
+        final Pattern patternOnline = Pattern.compile("^\\[" + index + "\\](.*?)Available(.+?)$", Pattern.DOTALL | Pattern.MULTILINE);
+        final Matcher matcherOnline = patternOnline.matcher(text);
 
-        String ref = null;
-        if (matcher.find()) {
-            ref = matcher.group();
-            ref = Util.removeLinesFromBottom(ref, 1);
-        } else if (fMatcher.find()) ref = fMatcher.group();
+        String refYear = null, refOnline = null, ref = null;
+        if (matcherYear.find()) refYear = matcherYear.group();
+        if (matcherOnline.find()) refOnline = matcherOnline.group();
+
+        if (refYear != null && refOnline != null) {
+            ref = refYear.length() <= refOnline.length() ? refYear : refOnline;
+        } else if (refYear != null) {
+            ref = refYear;
+        } else if (refOnline != null) {
+            ref = refOnline;
+        }
 
         ref = ref.replaceAll("\\[" + index + "\\] ", "");
 

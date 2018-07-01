@@ -1,5 +1,7 @@
-package textan.model.article;
+package textan.model.article.processing;
 
+import textan.model.article.Article;
+import textan.model.article.Section;
 import textan.model.util.Counter;
 import textan.model.util.Util;
 

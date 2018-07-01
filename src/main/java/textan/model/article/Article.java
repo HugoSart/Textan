@@ -33,7 +33,15 @@ public class Article {
         str.append("Number    : ").append(number).append("\n");
         str.append("Month     : ").append(month).append("\n");
         str.append("Year      : ").append(year).append("\n");
-        str.append("Title     : ").append(title).append("\n\n");
+        str.append("Title     : ").append(title).append("\n");
+        str.append("Authors   : ");
+        int i = 0;
+        for (String author : authors) {
+            str.append(author);
+            if (i < authors.size() - 1) str.append(", ");
+            i++;
+        }
+        str.append("\n\n");
         str.append("** Keywords **\n");
         for (String s : keywords)
             str.append(s).append("\n");
@@ -51,6 +59,15 @@ public class Article {
             }
 
         }
+
+        str.append("** References **").append("\n\n");
+        int j = 1;
+        for (String reference : references) {
+            str.append(j).append(" - ").append(reference).append("\n\n");
+            j++;
+        }
+        str.append("\n");
+        str.append("----------------------------------------- Article End --------------------------------------------");
 
         return str.toString();
 

@@ -206,7 +206,7 @@ public class Util {
         final Pattern pattern = Pattern.compile(regex, Pattern.DOTALL | Pattern.MULTILINE);
         final Matcher matcher = pattern.matcher(str);
 
-        String trash = null;
+        String trash = "";
         while (matcher.find())
             trash = matcher.group();
         return str.replace(trash, "");

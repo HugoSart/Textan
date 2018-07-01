@@ -1,20 +1,22 @@
-import edu.stanford.nlp.coref.CorefCoreAnnotations;
-import edu.stanford.nlp.coref.data.CorefChain;
-import edu.stanford.nlp.ie.util.RelationTriple;
-import edu.stanford.nlp.ling.CoreAnnotations;
-import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.pipeline.*;
-import edu.stanford.nlp.semgraph.SemanticGraph;
-import edu.stanford.nlp.semgraph.SemanticGraphCoreAnnotations;
-import edu.stanford.nlp.trees.Tree;
-import edu.stanford.nlp.trees.TreeCoreAnnotations;
-import edu.stanford.nlp.util.CoreMap;
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Level;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import textan.model.I3EArticleParser;
+import textan.model.article.Article;
+import textan.model.article.processing.Analyser;
+import textan.model.article.processing.Statistics;
+import textan.model.util.NLPUtils;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.Vector;
+import java.util.concurrent.Semaphore;
 
 /**
  * User: hugo_<br/>
@@ -22,112 +24,36 @@ import java.util.Properties;
  * Time: 18:59<br/>
  */
 public class NPLTest {
-    public static String text = "Much research has been conducted arguing that tipping points at which complex systems " +
-            "experience phase transitions are difficult to identify. To test the existence of tipping points in financial " +
-            "markets, based on the alternating offer strategic model we propose a network of bargaining agents who " +
-            "mutually either cooperate or compete, where the feedback mechanism between trading and price dynamics is " +
-            "driven by an external “hidden” variable R that quantifies the degree of market overpricing.Due to the feedback " +
-            "mechanism, " +
-            "R fluctuates and oscillates over time, and thus periods when the market is underpriced and overpriced occur " +
-            "repeatedly. As the market becomes overpriced, bubbles are created that ultimately burst as the market reaches " +
-            "a crash tipping point Rc. The market starts recovering from the crash as a recovery tipping point Rr is reached. " +
-            "The probability that the index will drop in the next year exhibits a strong hysteresis behavior very much " +
-            "alike critical transitions in other complex systems. The probability distribution function of R has a bimodal shape " +
-            "characteristic of small systems near the tipping point. By examining the S&P500 index we illustrate the " +
-            "applicability of the model and demonstrate that the financial data exhibit tipping points that agree with " +
-            "the model. We report a cointegration between the returns of the S&P 500 index and its intrinsic value.";
 
-    public static void main(String[] args) {
+    public static final String[] testDocNames = new String[]{"13.pdf","17.pdf","19.pdf","20.pdf","21.pdf","22.pdf","23.pdf","29.pdf","31.pdf","49.pdf","48.pdf","49.pdf","50.pdf","98.pdf","118.pdf","120.pdf"};
+    public static final String[] testDocNamesHalf = new String[]{"13.pdf","17.pdf","19.pdf","20.pdf","21.pdf","22.pdf","23.pdf"};
 
-        // Just ignore
+    public static void main(String[] args) throws InterruptedException, IOException, ParseException {
+
         BasicConfigurator.configure();
 
-        // creates a StanfordCoreNLP object, with POS tagging, lemmatization,
-
-        // NER, parsing, and coreference resolution
-
-        Properties props = new Properties();
-
-        props.setProperty("annotators", "tokenize, ssplit, pos, lemma, ner, parse, dcoref");
-
-        StanfordCoreNLP pipeline = new StanfordCoreNLP(props);
-
-        // read some text in the text variable
-
-        String text = "Karma of humans is AI";
-
-        // create an empty Annotation just with the given text
-
-        Annotation document = new Annotation(text);
-
-        // run all Annotators on this text
-
-        pipeline.annotate(document);
-
-
-
-        // these are all the sentences in this document
-
-        List <CoreMap> sentences = document.get(CoreAnnotations.SentencesAnnotation.class);
-
-        List<String> words = new ArrayList<>();
-
-        List<String> posTags = new ArrayList<>();
-
-        List<String> nerTags = new ArrayList<>();
-
-        for (CoreMap sentence : sentences) {
-
-            // traversing the words in the current sentence
-
-            for (CoreLabel token : sentence.get(CoreAnnotations.TokensAnnotation.class)) {
-
-                // this is the text of the token
-
-                String word = token.get(CoreAnnotations.TextAnnotation.class);
-
-                words.add(word);
-
-                // this is the POS tag of the token
-
-                String pos = token.get(CoreAnnotations.PartOfSpeechAnnotation.class);
-
-                posTags.add(pos);
-
-                // this is the NER label of the token
-
-                String ne = token.get(CoreAnnotations.NamedEntityTagAnnotation.class);
-
-                nerTags.add(ne);
-
-            }
-
-            // This is the syntactic parse tree of sentence
-
-            Tree tree = sentence.get(TreeCoreAnnotations.TreeAnnotation.class);
-
-            System.out.println("Tree:\n"+ tree);
-
-            // This is the dependency graph of the sentence
-
-            SemanticGraph dependencies = sentence.get(SemanticGraphCoreAnnotations.CollapsedDependenciesAnnotation.class);
-
-            System.out.println("Dependencies\n:"+ dependencies);
-
+        // Disable loggers
+        List<Logger> loggers = Collections.<Logger>list(LogManager.getCurrentLoggers());
+        loggers.add(LogManager.getRootLogger());
+        for (Logger logger : loggers) {
+            logger.setLevel(Level.OFF);
         }
 
-        System.out.println("Words: " + words.toString());
+        for (String testDocName : testDocNamesHalf) {
 
-        System.out.println("posTags: " + posTags.toString());
+            // Load file
+            PDDocument doc = PDDocument.load(new File("pdf/" + testDocName));
+            I3EArticleParser parser = new I3EArticleParser(doc);
+            Article article = parser.toArticle();
+            Analyser analyser = new Analyser(article);
 
-        System.out.println("nerTags: " + nerTags.toString());
+            System.out.println("File path: " + testDocName);
+            System.out.println("Objective: " + analyser.findObjective());
+            System.out.println("Problem: " + analyser.findProblem());
+            System.out.println("Methodology: " + analyser.findMethodology());
+            System.out.println();
+        }
 
-        // This is a map of the chain
-
-        Map<Integer, CorefChain> graph = document.get(CorefCoreAnnotations.CorefChainAnnotation.class);
-
-        System.out.println("Map of the chain:\n" + graph);
-
-        System.out.println( "End of Processing" );
     }
+
 }
