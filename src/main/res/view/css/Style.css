@@ -1,0 +1,243 @@
+/* =================== COLOR PALLETE ================== */
+{
+    dark-primary-color:     #D32F2F;
+    default-primary-color:  #F44336;
+    light-primary-color:    #FFCDD2;
+    text-primary-color:     #FFFFFF;
+    accent-color:           #448AFF;
+    primary-text-color:     #212121;
+    secondary-text-color:   #757575;
+    divider-color:          #BDBDBD;
+}
+
+
+/* ==================== CHECK BOX ==================== */
+.check-box {
+    -fx-text-fill: primary-text-color;
+}
+
+.check-box > .box {
+    /* background color of unselected checkbox */
+    -fx-background-color: transparent;
+    -fx-border-color: accent-color;
+}
+
+.check-box:selected > .box > .mark,
+.check-box:indeterminate  > .box > .mark {
+    /* modify mark color */
+    -fx-: accent-color;
+}
+
+.list-view {
+    -fx-background-color: transparent;
+}
+
+.permissions-list-view:disabled {
+    -fx-opacity: 1;
+}
+
+
+/* ==================== TEXT FIELD ==================== */
+
+.button {
+    -fx-background-radius: 0;
+    -fx-background-color: default-primary-color;
+    -fx-text-fill: white;
+}
+
+.button:hover {
+    -fx-background-color: rgba(0,0,0,0.2);
+}
+
+.button:pressed {
+    -fx-background-color: light-primary-color;
+}
+
+/* ================= SEARCH BOX ====================== */
+
+/* ==================== LABELS  ==================== */
+.error-label {
+    -fx-text-fill: #FF6D81;
+    -fx-font-style: inherit;
+    visibility: hidden;
+}
+
+/* ================== TABLE VIEW ====================== */
+.table-view{
+    -fx-background-color: transparent;
+}
+
+.table-view:focused{
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header-background{
+    -fx-background-color: default-primary-color;
+}
+
+.table-view .column-header-background .label{
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-cell{
+    -fx-text-fill: primary-text-color;
+}
+
+.table-row-cell{
+    -fx-background-color: -fx-table-cell-border-color, #FFFFFF;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}
+
+.table-row-cell:odd{
+    -fx-background-color: -fx-table-cell-border-color, #FFFFFF;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: default-primary-color;
+    -fx-background-insets: 0;
+    -fx-background-radius: 1;
+}
+
+/* ==================== TAB PANE  ==================== */
+
+.tab-pane {
+    -fx-tab-min-width:  0;
+    -fx-tab-min-height: 50;
+    -fx-tab-max-height: 50;
+}
+
+.tab-pane .tab {
+    -fx-background-color: default-primary-color;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+.tab-pane .tab {
+    -fx-background-color: default-primary-color;
+}
+
+.tab-pane .tab:hover {
+    -fx-background-color: rgba(0,0,0,0.2);
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: rgba(0,0,0,0.2);
+}
+
+.tab-pane .tab-header-background {
+    -fx-background-color: default-primary-color;
+}
+
+.tab-pane .tab .tab-label {
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.tab-pane .tab-label {
+    -fx-content-display: top;
+}
+
+.tab-pane .tab .image-view {
+    -fx-rotate: 0;
+}
+
+.vertical-tab-pane {
+    -fx-tab-min-width:  0;
+    -fx-tab-min-height: 210;
+    -fx-tab-max-height: 210;
+}
+
+.vertical-tab-pane .tab {
+    -fx-background-color: default-primary-color;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+.vertical-tab-pane .tab {
+    -fx-background-color: default-primary-color;
+}
+
+.vertical-tab-pane .tab:hover {
+    -fx-background-color: rgba(0,0,0,0.2);
+}
+
+.vertical-tab-pane .tab:selected {
+    -fx-background-color: accent-color;
+}
+
+.vertical-tab-pane .tab-header-background {
+    -fx-background-color: default-primary-color;
+}
+
+.vertical-tab-pane .tab .tab-label {
+    -fx-rotate: 90;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.vertical-tab-pane .tab-label {
+    -fx-content-display: top;
+}
+
+.vertical-tab-pane .tab .image-view {
+    -fx-rotate: 0;
+}
+
+.menu-button {
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: stretch;
+    -fx-pref-width:  64;
+    -fx-pref-height: 64;
+    -fx-background-color: transparent;
+}
+
+.image-button {
+    -fx-background-color: rgba(0,0,0,0);
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.image-button:hover {
+    -fx-background-color: rgba(0,0,0,0.1);
+}
+
+.image-button:pressed {
+    -fx-background-color: rgba(0,0,0,0.2);
+}
+
+.image-button-close {
+    -fx-background-color: rgba(0,0,0,0);
+    -fx-border-radius: 0;
+    -fx-background-radius: 0;
+}
+
+.image-button-close:hover {
+    -fx-background-color: #E81123;
+}
+
+.image-button-close:pressed {
+    -fx-background-color: #FF9B8E;
+}
+
+/* ============= DATE PICKER ============ */
+.date-picker > .text-field {
+    -fx-background-color: white;
+    -fx-background-insets: 0 0 0 0;
+    -fx-background-radius: 0 0 0 0;
+}
+
+.date-picker:focused > .text-field,
+.date-picker > .text-field:focused {
+    -fx-background-color: white;
+    -fx-background-insets: 0 0 0 0, 0 0 0 0, 0 0 0 0;
+    -fx-background-radius: 0 0 0 0, 0 0 0 0, 0;
+}
+

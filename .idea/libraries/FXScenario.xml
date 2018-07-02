@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="FXScenario">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../Libraries/Java/JavaFX/FXScenario.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../Libraries/Java/JavaFX/FXScenario.jar!/" />
+    </SOURCES>
+  </library>
+</component>

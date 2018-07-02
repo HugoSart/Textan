@@ -61,6 +61,9 @@ public class I3EArticleParser {
         for (int i = titleLines.size() + 1; i < header.split("\n").length; i++)
             article.authors.addAll(NLPUtils.findPersonalNames(lines[i]));
 
+        fullText = removeTrashInLine(fullText, article.title.toUpperCase());
+        docText = fullText;
+
         // Parse abstract
         String abs = fullText;
         abs = abs.split("[A][b][s][t][r][a][c][t][—]")[1].split("[I][n][d][e][x][ ][T][e][r][m][s][—]")[0].trim();
@@ -232,11 +235,19 @@ public class I3EArticleParser {
         str = Util.removeAll(str, "^[0-9]+-[0-9]+\\s©\\s[0-9]+\\sIEEE.+permission[.]$");
         str = Util.removeAll(str, "^See\\s+.+\\s+for\\s+more\\s+information[.]$");
 
-        // TODO: remove article name trash
-        // TODO: remove trash pdf 29
-
         str = str.replaceAll("(?m)^[ \t]*\r?\n", "");
         return str;
+
+    }
+
+    private String removeTrashInLine(String str, String trash) {
+
+        String[] lines = str.split("\\r?\\n");
+        for (String line : lines)
+            if (line.contains(trash) || line.matches("^[0-9]+\\s+IEEE.+$"))
+                str = str.replace(line, "");
+
+        return str.replaceAll("(?m)^[ \t]*\r?\n", "");
 
     }
 
@@ -254,7 +265,7 @@ public class I3EArticleParser {
         final Pattern patternYear = Pattern.compile("^\\[" + index + "\\](.*?)[0-9]+[.]$", Pattern.DOTALL | Pattern.MULTILINE);
         final Matcher matcherYear = patternYear.matcher(text);
 
-        final Pattern patternOnline = Pattern.compile("^\\[" + index + "\\](.*?)Available(.+?)$", Pattern.DOTALL | Pattern.MULTILINE);
+        final Pattern patternOnline = Pattern.compile("^\\[" + index + "\\](.*?)Available(.+?)[.]$", Pattern.DOTALL | Pattern.MULTILINE);
         final Matcher matcherOnline = patternOnline.matcher(text);
 
         String refYear = null, refOnline = null, ref = null;

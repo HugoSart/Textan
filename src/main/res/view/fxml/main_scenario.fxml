@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="680.0" prefWidth="1114.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="1250.0" style="-fx-background-color: default-primary-color;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button fx:id="btOpenFile" contentDisplay="TOP" mnemonicParsing="false" onAction="#btOpenFile_onAction" prefHeight="77.0" prefWidth="64.0" text="Abrir">
+               <graphic>
+                  <ImageView>
+                     <image>
+                        <Image url="@../icons/file-pdf-box.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <HBox.margin>
+                  <Insets left="16.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="btExport" contentDisplay="TOP" disable="true" mnemonicParsing="false" onAction="#btExport_onAction" prefHeight="77.0" prefWidth="64.0" text="Exportar">
+               <graphic>
+                  <ImageView>
+                     <image>
+                        <Image url="@../icons/file-export.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <HBox.margin>
+                  <Insets left="32.0" />
+               </HBox.margin>
+            </Button>
+            <Line startY="100.0" stroke="#ffffff82">
+               <HBox.margin>
+                  <Insets left="32.0" />
+               </HBox.margin>
+            </Line>
+            <AnchorPane fx:id="paneTitle" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="lbTitle" alignment="CENTER" contentDisplay="CENTER" layoutX="-5.0" layoutY="24.0" prefHeight="27.0" prefWidth="905.0" textFill="WHITE" visible="false" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0">
+                     <font>
+                        <Font name="System Italic" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="lbAuthors" alignment="CENTER" contentDisplay="CENTER" layoutY="51.0" textFill="WHITE" visible="false" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="51.0">
+                     <font>
+                        <Font name="System Italic" size="14.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </children>
+         <effect>
+            <DropShadow />
+         </effect>
+      </HBox>
+      <AnchorPane fx:id="paneArticle" layoutY="100.0" prefHeight="580.0" prefWidth="1114.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
+         <children>
+            <Label layoutX="14.0" layoutY="546.0" text="Termos mais citados:" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="lbTerms" alignment="TOP_LEFT" layoutX="154.0" layoutY="553.0" prefHeight="20.0" prefWidth="951.0" text="p1, p2, p3, p4, p5, p6, p7, p8, p9, p10" textAlignment="JUSTIFY" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="154.0" AnchorPane.rightAnchor="9.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Label>
+            <ScrollPane layoutX="14.0" layoutY="14.0" prefHeight="523.0" prefWidth="480.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="620.0" AnchorPane.topAnchor="14.0">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="465.0">
+                     <children>
+                        <Label layoutX="14.0" layoutY="11.0" text="Objetivo" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="383.0" AnchorPane.topAnchor="11.0">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbObjective" alignment="TOP_LEFT" layoutX="14.0" layoutY="38.0" prefHeight="187.0" prefWidth="412.0" text="p1, p2, p3, p4, p5, p6, p7, p8, p9, p10" textAlignment="JUSTIFY" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="39.0" AnchorPane.topAnchor="38.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="14.0" layoutY="225.0" prefHeight="27.0" prefWidth="106.0" text="Problema" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="375.0" AnchorPane.topAnchor="225.0">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbProblem" alignment="TOP_LEFT" layoutX="14.0" layoutY="252.0" prefHeight="187.0" prefWidth="412.0" text="p1, p2, p3, p4, p5, p6, p7, p8, p9, p10" textAlignment="JUSTIFY" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="39.0" AnchorPane.topAnchor="252.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="14.0" layoutY="439.0" text="Metodologia" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="348.0" AnchorPane.topAnchor="439.0">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbMethodology" alignment="TOP_LEFT" layoutX="14.0" layoutY="466.0" prefHeight="187.0" prefWidth="412.0" text="p1, p2, p3, p4, p5, p6, p7, p8, p9, p10" textAlignment="JUSTIFY" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="39.0" AnchorPane.topAnchor="466.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="14.0" layoutY="653.0" text="Contribuićões" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="341.0" AnchorPane.topAnchor="653.0">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lbContributions" alignment="TOP_LEFT" layoutX="14.0" layoutY="680.0" prefHeight="187.0" prefWidth="412.0" text="p1, p2, p3, p4, p5, p6, p7, p8, p9, p10" textAlignment="JUSTIFY" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="39.0" AnchorPane.topAnchor="680.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+            <ListView fx:id="lvReferences" layoutX="513.0" layoutY="41.0" prefHeight="497.0" prefWidth="579.0" AnchorPane.bottomAnchor="49.0" AnchorPane.rightAnchor="22.0" AnchorPane.topAnchor="41.0" />
+            <Label layoutX="513.0" layoutY="14.0" text="Referências" AnchorPane.rightAnchor="510.0" AnchorPane.topAnchor="14.0">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children></AnchorPane>
+      <AnchorPane fx:id="paneLoading" prefHeight="200.0" prefWidth="200.0" visible="false">
+         <children>
+            <Label fx:id="lbLoading" layoutX="504.0" layoutY="405.0" text="Carregando arquivo" />
+            <ProgressIndicator fx:id="piLoading" layoutX="533.0" layoutY="344.0" maxHeight="48.0" maxWidth="48.0" minHeight="48.0" minWidth="48.0" prefHeight="48.0" prefWidth="48.0" AnchorPane.bottomAnchor="295.0" AnchorPane.leftAnchor="533.0" AnchorPane.rightAnchor="533.0" AnchorPane.topAnchor="344.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

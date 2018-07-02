@@ -29,7 +29,6 @@ public class NLPUtils {
     }
 
     private static final Pattern END_OF_SENTENCE = Pattern.compile("\\.\\s+");
-
     public static String findSentence(String text, String word) {
         final String lcword = word.toLowerCase();
         return END_OF_SENTENCE.splitAsStream(text)

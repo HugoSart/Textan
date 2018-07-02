@@ -29,11 +29,11 @@ public class Analyser {
     }
 
     public String findMethodology() {
-        return findSentence(new String[]{"methodology", "interviews", "survey", "content", "analysis", "method"});
+        return findSentence(new String[]{"methodology", "interviews", "survey", "content", "analysis", "method", "approach", "technique", "process", "mode", "procedure", "way", "design", "style"});
     }
 
     public String findContribution() {
-        return null;
+        return findSentence(new String[]{"contributes to", "contribute to", "contributed", "contribute", "contributing", "contributes", "contribution", "contributions"});
     }
 
     private String findSentence(String[] keyWords) {
